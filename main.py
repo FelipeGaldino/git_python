@@ -45,38 +45,14 @@ def visualize_data(data):
                         name='Weight'))
     fig.show()
     
+# ALTERATE BRANCH 
+def alterate_branch(data):
+    
+    c1 = pd.DataFrame(data[['Length1','Height','Width','Species']])
+    d1 = pd.DataFrame(data[['Weight']])
+    w1 = pd.get_dummies(c1, columns=["Species"])
 
-# Model: decision tree classifier
-def decision_tree(data):
-
-    X1 = pd.DataFrame(data[['Length1','Height','Width','Species']])
-    y1 = pd.DataFrame(data[['Weight']])
-    X1 = pd.get_dummies(X1, columns=["Species"])
-
-    X_train_1, X_test_1, y_train_1, y_test_1 = train_test_split(X1,y1,random_state=1,test_size=0.2)
-
-    mms = MinMaxScaler()
-    X_train_norm_1 = mms.fit_transform(X_train_1)
-    X_test_norm_1 = mms.transform(X_test_1)
-
-    scaler = StandardScaler()
-    scaler.fit(X_train_1)
-    X_train_std_1 = scaler.transform(X_train_1)
-    X_test_std_1 = scaler.transform(X_test_1)
-
-    xx = np.arange(len(X_train_std_1))
-    yy1 = X_train_norm_1[:,0]
-    yy2 = X_train_std_1[:,0]
-
-    dtr_model = dtr(splitter='random')
-    dtr_model.fit(X_train_norm_1,y_train_1)
-
-    print("DecisionTreeClassifier Train Score: ", dtr_model.score(X_train_norm_1, y_train_1))
-    print("DecisionTreeClassifier Test Score: ", dtr_model.score(X_test_norm_1, y_test_1))
-
-    fig,axes = plt.subplots(nrows=1,ncols=1,figsize=(15,15),dpi=300)
-    tree.plot_tree(dtr_model,filled=True)
-    plt.show()
+    X_train_1, X_test_1, y_train_1, y_test_1 = train_test_split(c1,d1,random_state=1,test_size=0.2)
 
 if __name__ == "__main__":
     fish_df = pd.read_csv('./fish.csv')
