@@ -14,22 +14,6 @@ import seaborn as sns
 def stat_param(data):
     print(data.describe())
 
-# scatter plot
-def scatter(data):
-
-    layout = go.Layout(
-        title="Height x Width",
-        xaxis_title="Height",
-        yaxis_title="Width"
-        )
-
-    fig = go.Figure(
-        data=go.Scatter(x=data['Height'], y=data['Width'],mode='markers'), 
-        layout=layout)
-         
-    fig.show()
-
-
 # line plot
 def visualize_data(data):  
      
@@ -97,3 +81,16 @@ if __name__ == "__main__":
     classifier = SVC(kernel = 'linear', random_state = 42)
     classifier.fit(X_train, y_train)
     print(f'Acurácia do modelo {classifier.score(X_test,y_test)}. \nPython é melhor que R')
+
+    print(classifier.score(X_test,y_test))
+    print(classifier.score(X_test,y_test))
+    print(classifier.score(X_test,y_test))
+    print(classifier.score(X_test,y_test))
+    print(classifier.score(X_test,y_test))
+    print(classifier.score(X_test,y_test))
+    print(classifier.score(X_test,y_test))
+    print(classifier.score(X_test,y_test))
+    print(classifier.score(X_test,y_test))
+    print(classifier.score(X_test,y_test))
+    
+    print(classifier.score(X_test,y_test))
