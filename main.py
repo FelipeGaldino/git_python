@@ -1,36 +1,123 @@
-
-import numpy as np # linear algebra
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import pandas as pd
+import plotly.graph_objects as go 
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeRegressor as dtr
+from sklearn import tree
 import matplotlib.pyplot as plt
 import seaborn as sns
+# Exploratory
 
-fish=pd.read_csv('fish.csv')
+# statistical parameters
+def stat_param(data):
+    print(data.describe())
 
-#visualization
-plt.figure(figsize=(12,8))
-sns.countplot(fish['Species'])
-plt.show()
+# scatter plot
+def scatter(data):
 
-# We can look at an individual feature in Seaborn through a
+    layout = go.Layout(
+        title="Height x Width",
+        xaxis_title="Height",
+        yaxis_title="Width"
+        )
 
-plt.figure(figsize=(12,8))
-sns.boxplot(x="Species", y="Weight", data=fish)
-plt.show()
+    fig = go.Figure(
+        data=go.Scatter(x=data['Height'], y=data['Width'],mode='markers'), 
+        layout=layout)
+         
+    fig.show()
 
-#we will split our data to dependent and independent
-#first dependent data
-X=fish.iloc[:,1:]
 
-#second independent
-# we add more [] to make it 2d array
-y=fish[["Species"]]
+# line plot
+def visualize_data(data):  
+     
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(y=data['Length1'],
+                        mode='lines',
+                        name='Length1'))
+    fig.add_trace(go.Scatter(y=data['Length2'],
+                        mode='lines',
+                        name='Length2'))
+    fig.add_trace(go.Scatter(y=data['Weight'],
+                        mode='lines',
+                        name='Weight'))
+    fig.show()
+    
 
-#split our data to train and test
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+# Model: decision tree classifier
+def decision_tree(data):
 
-# Support Vector Machine (SVM)
-from sklearn.svm import SVC
-classifier = SVC(kernel = 'linear', random_state = 42)
-classifier.fit(X_train, y_train)
-print(classifier.score(X_test,y_test))
+    X1 = pd.DataFrame(data[['Length1','Height','Width','Species']])
+    y1 = pd.DataFrame(data[['Weight']])
+    X1 = pd.get_dummies(X1, columns=["Species"])
+
+    X_train_1, X_test_1, y_train_1, y_test_1 = train_test_split(X1,y1,random_state=1,test_size=0.2)
+
+    mms = MinMaxScaler()
+    X_train_norm_1 = mms.fit_transform(X_train_1)
+    X_test_norm_1 = mms.transform(X_test_1)
+
+    scaler = StandardScaler()
+    scaler.fit(X_train_1)
+    X_train_std_1 = scaler.transform(X_train_1)
+    X_test_std_1 = scaler.transform(X_test_1)
+
+    xx = np.arange(len(X_train_std_1))
+    yy1 = X_train_norm_1[:,0]
+    yy2 = X_train_std_1[:,0]
+
+    dtr_model = dtr(splitter='random')
+    dtr_model.fit(X_train_norm_1,y_train_1)
+
+    print("DecisionTreeClassifier Train Score: ", dtr_model.score(X_train_norm_1, y_train_1))
+    print("DecisionTreeClassifier Test Score: ", dtr_model.score(X_test_norm_1, y_test_1))
+
+    fig,axes = plt.subplots(nrows=1,ncols=1,figsize=(15,15),dpi=300)
+    tree.plot_tree(dtr_model,filled=True)
+    plt.show()
+
+if __name__ == "__main__":
+    fish_df = pd.read_csv('./fish.csv')
+    print(fish_df.head(5))
+    
+    stat_param(fish_df)
+
+    scatter(fish_df)
+    visualize_data(fish_df)
+
+    decision_tree(fish_df)
+    
+    
+    fish=pd.read_csv('fish.csv')
+
+
+    #visualization
+    plt.figure(figsize=(12,8))
+    sns.countplot(fish['Species'])
+    plt.show()
+
+    # We can look at an individual feature in Seaborn through a
+
+    plt.figure(figsize=(12,8))
+    sns.boxplot(x="Species", y="Weight", data=fish)
+    plt.show()
+
+    #we will split our data to dependent and independent
+    #first dependent data
+    X=fish.iloc[:,1:]
+
+    #second independent
+    # we add more [] to make it 2d array
+    y=fish[["Species"]]
+
+    #split our data to train and test
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+
+    # Support Vector Machine (SVM)
+    from sklearn.svm import SVC
+    classifier = SVC(kernel = 'linear', random_state = 42)
+    classifier.fit(X_train, y_train)
+    print(classifier.score(X_test,y_test))
