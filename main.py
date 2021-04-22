@@ -14,22 +14,6 @@ import seaborn as sns
 def stat_param(data):
     print(data.describe())
 
-# scatter plot
-def scatter(data):
-
-    layout = go.Layout(
-        title="Height x Width",
-        xaxis_title="Height",
-        yaxis_title="Width"
-        )
-
-    fig = go.Figure(
-        data=go.Scatter(x=data['Height'], y=data['Width'],mode='markers'), 
-        layout=layout)
-         
-    fig.show()
-
-
 # line plot
 def visualize_data(data):  
      
