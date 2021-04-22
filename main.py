@@ -80,6 +80,8 @@ if __name__ == "__main__":
     from sklearn.svm import SVC
     classifier = SVC(kernel = 'linear', random_state = 42)
     classifier.fit(X_train, y_train)
+    print(f'Acurácia do modelo {classifier.score(X_test,y_test)}. \nPython é melhor que R')
+
     print(classifier.score(X_test,y_test))
     print(classifier.score(X_test,y_test))
     print(classifier.score(X_test,y_test))
